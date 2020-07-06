@@ -1,10 +1,10 @@
 To run this application you must have atleast node.js 1.14.0+
 
-#nodeAttack
+# nodeAttack
 
-##A simple game made in javascript
+## A simple game made in javascript
 
-#How to play
+# How to play
 
 1. Download this repository
 2. Extract it into its own folder
@@ -15,4 +15,4 @@ To run this application you must have atleast node.js 1.14.0+
 7. Good Luck!
 
 
-####If you find any issues please join the [discord server](https://discord.gg/kdPgPHH) and direct message a developer.
+#### If you find any issues please join the [discord server](https://discord.gg/kdPgPHH) and direct message a developer.
