@@ -1,0 +1,12 @@
+{
+    "weapons": {
+        "Mace": {
+            "description":"A big heavy mace with a lotta power.",
+            "ap":13
+        },
+        "Pistol":{
+            "description":"A small gun that packs a punch.",
+            "ap":10
+        }
+    }
+}
