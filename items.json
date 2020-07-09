@@ -1,0 +1,20 @@
+[       
+    {   
+        "name": "none",
+        "type": "none",
+        "description": "Equip this to revert your ap to the original",
+        "ap":"starting ap"
+    }, 
+    {   
+        "name": "Dagger",
+        "type": "weapon",
+        "description": "A small dagger fit for a begginer.",
+        "ap": 6
+    }, 
+    {   
+        "name": "Bow",
+        "type": "weapon",
+        "description": "A bow. Its strong!",
+        "ap": 8
+    }
+]
