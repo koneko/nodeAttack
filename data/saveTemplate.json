@@ -1,0 +1,12 @@
+{
+    "player":{
+        "level": 1,
+        "gold": 10,
+        "health": 20,
+        "strength": 5
+    },
+    "enemy":{
+        "health": 20,
+        "strength": 5
+    }
+}

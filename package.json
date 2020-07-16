@@ -1,17 +1,14 @@
 {
-  "name": "game",
+  "name": "nodeattack",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.1.0",
-    "chalk-animation": "^1.6.0",
-    "enquirer": "^2.3.6",
-    "yargs": "^15.4.0"
+    "chalk": "^4.1.0"
   }
 }
