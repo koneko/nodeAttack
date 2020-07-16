@@ -1,5 +1,7 @@
 const chalk = require("chalk");
 const fs = require("fs");
+const shop = require("./shop.js");
+const { warpShop } = require("./shop.js");
 
 const createGame = function () {
     //Todo: check if save.json already exists, and list stats.
@@ -22,7 +24,7 @@ const saveGame = function (data) {
 
 
 const displayMainMenu = function(readline) {
-    console.log(chalk.green('Welcome to "nodeAttack"!'));
+    console.log(chalk.green('Welcome to nodeAttack!'));
     console.log(chalk.yellow('Main menu:'));
     console.log(chalk.cyan("new  - New game"));
     console.log(chalk.blue("load - Load saved game"));
@@ -30,7 +32,7 @@ const displayMainMenu = function(readline) {
     console.log("");
 
 
-    readline.question("Please enter your choice: ", (command) => {
+    readline.question("Please enter a command: ", (command) => {
         //console.log(`You have entered ${command}.`);
         if(command == "new") {
             readline.question("Are you sure you want to begin a new game? (y/n) ", (answer) => {
@@ -43,7 +45,8 @@ const displayMainMenu = function(readline) {
                     displayMainMenu(readline);
                 } else {
                     console.log("Your response is not valid.")
-                    command = "new"
+                    console.log("Please provide a valid response.")
+                    displayMainMenu(readline);
                 }
             })
 
@@ -57,7 +60,7 @@ const displayMainMenu = function(readline) {
             process.exit(0);
     
         } else { 
-            console.log(chalk.red(`Command ${command} is not a valid command!`));   
+            console.log(chalk.red(`Command "${command}" is not a valid command!`));   
             console.log("");
             displayMainMenu(readline);     
         }
@@ -75,7 +78,7 @@ const gameLoop = function (data, readline) {
     console.log("back   - Back to main menu");
     console.log("");
 
-    readline.question("Please enter command: ", (command) => {
+    readline.question("Please enter a command: ", (command) => {
         //console.log(`You have entered ${command}.`);
         switch (command) {
             case "stats":
@@ -88,27 +91,34 @@ const gameLoop = function (data, readline) {
                 console.log(chalk.grey("=========="))
                 console.log(chalk.cyan(`You have ${data.player.currentxp}/${data.player.xpforlevelup} experience points required to level up to the next level.`))
                 gameLoop(data, readline);
+                //Stats done
                 break;
 
             case "shop":
-                console.log(chalk.yellow("Sending you to the shop."));
+                console.log("Shopkeeper: Welcome to my shop.")
+                warpShop(data, readline)
                 break;
 
             case "fight":
                 console.log(chalk.red("Alright, generating you an opponent."));
+                //adapt normal code with this,
                 break;
 
             case "save":
-                console.log(chalk.green("Saving your "));
+                console.log(chalk.green("Your stats have been saved!"));
+                saveGame(data)
+                gameLoop(data, readline)
+                //saving is done(handled by save and load functions)
                 break;
 
             case "back":
                 console.log(chalk.green("Sending you to the main menu."));
                 displayMainMenu(readline);
+                //sends to mainmenu
                 break;
 
             default:
-                console.log(chalk.red(`Command ${command} is not a valid command!`));
+                console.log(chalk.red(`Command "${command}" is not a valid command!`));
                 console.log("");
                 gameLoop(data, readline);
                 break;
