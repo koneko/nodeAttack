@@ -1,13 +1,6 @@
 const fs = require("fs")
 const chalk = require("chalk");
 
-
-const loadGame = function () {
-    var dataUnparsed = fs.readFileSync("data/save.json");
-    var data = JSON.parse(dataUnparsed);
-    return data;
-};
-
 const showShopInventory = function() {
     var shopInv = JSON.parse(fs.readFileSync("data/shopInventory.json"))
     console.log(`Shopkeeper: Here are the items in my shop.`)
@@ -26,44 +19,44 @@ const showShopInventory = function() {
     });
 }
 
-const warpShop = function(data, readline) {
+const warpShop = function() {
     //to go back to menu, use gameloop
     console.log("buy  - Buys an item from the shop")
     console.log("back - Brings you back to the game menu")
-    readline.question("Choose an action: ", (action) => {
+    api.readline.question("Choose an action: ", (action) => {
         if(action === "buy") {
-            buyItem(data, readline)
+            buyItem()
         } else if(action === "back") {
-            gameLoop(data, readline)
+            api.gameLoop()
         } else {
             console.log(chalk.red("The action you input is invalid. Please retype it."))
-            warpShop(data, readline)
+            api.warpShop()
         }
     })
     // buyItem(data)
 }
 
-const buyItem = function(data, readline) {
+const buyItem = function() {
     showShopInventory()
-    readline.question("I would like to buy: ", (itemName) => {
+    api.readline.question("I would like to buy: ", (itemName) => {
         var shopInv = JSON.parse(fs.readFileSync("data/shopInventory.json"))
         let item = shopInv.find((shopItem) => itemName == shopItem.name);
         if(item === null) {
             console.log("The item you input is not real. Try again.");
-            buyItem(data, readline)
+            buyItem()
         } else {
             console.log(chalk.blue("Shopkeeper: Let me check your stats."))
-            if(data.player.level >= item.level) {
-                if(data.player.gold >= item.value) {
+            if(api.data.player.level >= item.level) {
+                if(api.data.player.gold >= item.value) {
                     console.log(chalk.red("Yay!"))
-                    warpShop(data, readline)
+                    api.warpShop()
                 } else {
                     console.log(`Shopkeeper: ${chalk.red("Sadly you do not have enough gold to buy this item.")}`)
-                    warpShop(data, readline)
+                    api.warpShop()
                 }
             } else {
                 console.log(`Shopkeeper: ${chalk.red("Sorry, your level does not match the item's level.")}`)
-                warpShop(data, readline)
+                api.warpShop()
             }
         }
         
