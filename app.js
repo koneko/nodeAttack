@@ -10,6 +10,4 @@ game.displayMainMenu(readline);
 //readline.close();
 
 
-//Hello
-
-// Hello, back
+//Hello there

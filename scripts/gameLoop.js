@@ -6,7 +6,6 @@ const createGame = function () {
     var templateUnparsed = fs.readFileSync("data/saveTemplate.json");
     var template = JSON.parse(templateUnparsed);
     fs.writeFileSync("data/save.json", templateUnparsed);
-    console.log("gold: " + template.player.gold);
     return template;
 };
 
@@ -23,28 +22,38 @@ const saveGame = function (data) {
 
 
 const displayMainMenu = function(readline) {
-    console.log('Welcome to "nodeAttack"!');
-    console.log('Main menu:');
-    console.log("new  - New game");
-    console.log("load - Load saved game");
-    console.log("exit - Exit game");
+    console.log(chalk.green('Welcome to "nodeAttack"!'));
+    console.log(chalk.yellow('Main menu:'));
+    console.log(chalk.cyan("new  - New game"));
+    console.log(chalk.blue("load - Load saved game"));
+    console.log(chalk.red("exit - Exit game"));
     console.log("");
 
 
     readline.question("Please enter your choice: ", (command) => {
         //console.log(`You have entered ${command}.`);
         if(command == "new") {
-            console.log(chalk.green("Alright, starting a new game for you."));
-            var data = createGame()
-            gameLoop(data, readline)
+            readline.question("Are you sure you want to begin a new game? (y/n) ", (answer) => {
+                if(answer === "y") {
+                    console.log(chalk.green("Alright, starting a new game for you."));
+                    var data = createGame()
+                    gameLoop(data, readline)        
+                } else if (answer === "n") {
+                    console.log("Good, your save wasn't over written. Bringing you back to the main menu.")
+                    displayMainMenu(readline);
+                } else {
+                    console.log("Your response is not valid.")
+                    command = "new"
+                }
+            })
 
         } else if(command == "load") {
-            console.log(chalk.inverse(`You have chosen to load your previous save`));   
+            console.log(chalk.cyan(`Your save has been loaded.`));   
             var data = loadGame()
             gameLoop(data, readline)
     
         } else if(command == "exit") {
-            console.log(chalk.inverse(`Sorry that you are leaving :(`));   
+            console.log(chalk.yellow(`Goodbye, dear player.`));   
             process.exit(0);
     
         } else { 
@@ -70,7 +79,14 @@ const gameLoop = function (data, readline) {
         //console.log(`You have entered ${command}.`);
         switch (command) {
             case "stats":
+                console.log(chalk.grey("=========="))
                 console.log(chalk.magenta("Displaying your stats: "));
+                console.log(chalk.green(`Level: ${data.player.level}`))
+                console.log(chalk.yellow(`Gold: ${data.player.gold}`))
+                console.log(chalk.red(`Health points: ${data.player.health}`))
+                console.log(chalk.blue(`Strength points: ${data.player.strength}`))
+                console.log(chalk.grey("=========="))
+                console.log(chalk.cyan(`You have ${data.player.currentxp}/${data.player.xpforlevelup} experience points required to level up to the next level.`))
                 gameLoop(data, readline);
                 break;
 

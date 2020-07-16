@@ -1,6 +1,8 @@
 {
     "player":{
         "level": 1,
+        "currentxp": 1,
+        "xpforlevelup": 100, 
         "gold": 10,
         "health": 20,
         "strength": 5
