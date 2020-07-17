@@ -27,3 +27,5 @@ global.api = {
 
 displayMainMenu();
 //readline.close();
+
+//Im trash at coding xd
