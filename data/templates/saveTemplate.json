@@ -5,7 +5,8 @@
         "xpforlevelup": 100, 
         "gold": 10,
         "health": 20,
-        "strength": 5
+        "strength": 5,
+        "heldWeapon": "none"
     },
     "enemy":{
         "health": 20,

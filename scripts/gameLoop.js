@@ -3,14 +3,18 @@ const fs = require("fs");
 
 const createGame = function () {
     //Todo: check if save.json already exists, and list stats.
-    var templateUnparsed = fs.readFileSync("data/saveTemplate.json");
+    var templateUnparsed = fs.readFileSync("data/templates/saveTemplate.json");
+    var templateUnparsedInv = fs.readFileSync("data/templates/playerInventoryTemplate.json");
     fs.writeFileSync("data/save.json", templateUnparsed);
+    fs.writeFileSync("data/inventory.json", templateUnparsedInv);
     loadGame();
 };
 
 const loadGame = function () {
     var dataUnparsed = fs.readFileSync("data/save.json");
+    var dataUnparsedInv = fs.readFileSync("data/inventory.json");
     api.data = JSON.parse(dataUnparsed);
+    api.playerInv = JSON.parse(dataUnparsedInv)
 };
 
 const saveGame = function () {
@@ -34,7 +38,7 @@ const displayMainMenu = function() {
                 if(answer === "y") {
                     console.log(chalk.green("Alright, starting a new game for you."));
                     api.createGame()
-                    api.gameLoop()        
+                    api.gameLoop()
                 } else if (answer === "n") {
                     console.log("Good, your save wasn't over written. Bringing you back to the main menu.")
                     api.displayMainMenu();
@@ -66,11 +70,15 @@ const displayMainMenu = function() {
 const gameLoop = function () {
     console.log("");
     console.log("Make a choice:");
-    console.log("stats  - Your character stats");
-    console.log("shop   - Enter shop and buy/sell");
-    console.log("fight  - Fight next NPC");
-    console.log("save   - Save game");
-    console.log("back   - Back to main menu");
+    console.log(chalk.grey("----Menu navigation----"))
+    console.log(chalk.green("fight  - Fight next NPC"));
+    console.log(chalk.green("shop   - Enter shop and buy/sell"));
+    console.log(chalk.green("back   - Back to main menu"));
+    console.log(chalk.grey("----Character Stats----"))
+    console.log(chalk.cyan("equip  - Lets you equip an item from your inventory"))
+    console.log(chalk.cyan("stats  - Displays your character stats"));
+    console.log(chalk.cyan("save   - Saves the game"));
+    console.log(chalk.cyan("reload - Check stats for change"));
     console.log("");
 
     api.readline.question("Please enter a command: ", (command) => {
@@ -78,11 +86,12 @@ const gameLoop = function () {
         switch (command) {
             case "stats":
                 console.log(chalk.grey("=========="))
-                console.log(chalk.magenta("Displaying your stats: "));
+                console.log("Displaying your stats: ");
                 console.log(chalk.green(`Level: ${api.data.player.level}`))
                 console.log(chalk.yellow(`Gold: ${api.data.player.gold}`))
                 console.log(chalk.red(`Health points: ${api.data.player.health}`))
                 console.log(chalk.blue(`Strength points: ${api.data.player.strength}`))
+                console.log(chalk.magenta(`Current weapon: ${api.data.player.heldWeapon}`))
                 console.log(chalk.grey("=========="))
                 console.log(chalk.cyan(`You have ${api.data.player.currentxp}/${api.data.player.xpforlevelup} experience points required to level up to the next level.`))
                 api.gameLoop();
@@ -104,6 +113,13 @@ const gameLoop = function () {
                 api.saveGame()
                 api.gameLoop()
                 //saving is done(handled by save and load functions)
+                break;
+
+            case "reload":
+                    console.log(chalk.blue("Stats reloaded!"));
+                    api.loadGame()
+                    api.gameLoop()
+                    //saving is done(handled by save and load functions)
                 break;
 
             case "back":

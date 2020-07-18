@@ -1,0 +1,10 @@
+[
+    {
+        "name" :"Spiked Gloves",
+        "description": "Gloves with spikes. A little addon to your fists.",
+        "type": "weapon",
+        "level": 1,
+        "value": 10,
+        "strength": 2
+    }
+]
