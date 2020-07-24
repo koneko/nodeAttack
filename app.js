@@ -3,8 +3,15 @@ const {
     gameLoop,
     loadGame,
     saveGame,
-    displayMainMenu
+    displayMainMenu,
+    inventoryLoop
 } = require("./scripts/gameLoop.js");
+const {
+    checkHp,
+    enemyTurnAI,
+    attackEnemy,
+    healSelf
+} = require("./scripts/fight.js")
 const {warpShop} = require("./scripts/shop.js")
 const {buyItem} = require("./scripts/shop.js")
 const chalk = require("chalk");
@@ -14,8 +21,13 @@ const readline = require("readline").createInterface({
 });
 
 global.api = {
+    checkHp,
+    enemyTurnAI,
+    attackEnemy,
+    healSelf,
     createGame,
     gameLoop,
+    inventoryLoop,
     loadGame,
     saveGame,
     displayMainMenu,

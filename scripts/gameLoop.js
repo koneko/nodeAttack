@@ -68,14 +68,13 @@ const displayMainMenu = function() {
 }
 
 const gameLoop = function () {
-    console.log("");
-    console.log("Make a choice:");
+
     console.log(chalk.grey("----Menu navigation----"))
     console.log(chalk.green("fight  - Fight next NPC"));
     console.log(chalk.green("shop   - Enter shop and buy/sell"));
+    console.log(chalk.green("inv    - Displays inventory menu"))
     console.log(chalk.green("back   - Back to main menu"));
     console.log(chalk.grey("----Character Stats----"))
-    console.log(chalk.cyan("equip  - Lets you equip an item from your inventory"))
     console.log(chalk.cyan("stats  - Displays your character stats"));
     console.log(chalk.cyan("save   - Saves the game"));
     console.log(chalk.cyan("reload - Check stats for change"));
@@ -104,8 +103,7 @@ const gameLoop = function () {
                 break;
 
             case "fight":
-                console.log(chalk.red("Alright, generating you an opponent."));
-                //adapt normal code with this,
+                api.attackEnemy()
                 break;
 
             case "save":
@@ -128,6 +126,11 @@ const gameLoop = function () {
                 //sends to mainmenu
                 break;
 
+            case "inv":
+            console.log(chalk.red("Welcome to the inventory menu."))
+            api.inventoryLoop()
+                break;
+
             default:
                 console.log(chalk.red(`Command "${command}" is not a valid command!`));
                 console.log("");
@@ -137,10 +140,53 @@ const gameLoop = function () {
     });
 };
 
+
+
+const inventoryLoop = function() {
+    console.log("Please make a choice: ")
+    console.log("inventory - Displays you your inventory")
+    console.log("equip     - Lets you equip and item from your inventory")
+    console.log("back      - Back to the main menu")
+    api.readline.question("Please enter a command: ", (command) => {
+        if(command === "inventory") {
+
+        } else if (command === "equip") {
+
+        } else if (command === "back") {
+
+        } else {
+
+        }
+    })
+}
+
+
+const showInventory = function() {
+    var playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
+    console.log(chalk.grey("--------------------"))
+    console.log(chalk.cyan(`In your inventory you have ${playerInv.length} item(s) in your inventory.`))
+    console.log("Here are their stats individualy.")
+    console.log(chalk.grey("--------------------"))
+    playerInv.forEach(item => {
+        console.log(chalk.blue(`Type: ${item.type}`))
+        console.log(chalk.red(`Name: ${item.name}`))
+        console.log(chalk.green(`Description: ${item.description}`))
+        console.log(chalk.cyan(`Required level: ${item.level}`))
+        console.log(chalk.yellow(`Value: ${item.value}`))
+        console.log(chalk.magenta(`Strength: ${item.strength}`))
+        console.log(chalk.grey("--------------------"))
+    });
+}
+
+const equipItem = function() {
+
+}
+
 module.exports = {
     createGame,
     gameLoop,
     loadGame,
     saveGame,
-    displayMainMenu
+    displayMainMenu,
+    inventoryLoop
 };
