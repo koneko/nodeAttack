@@ -70,13 +70,12 @@ const displayMainMenu = function() {
 
 const gameLoop = function () {
 
-    console.log(chalk.grey("----Menu navigation----"))
-    console.log(chalk.red("fight  - Fight next NPC"));
-    console.log(chalk.blue("shop   - Enter shop and buy/sell"));
-    console.log(chalk.green("back   - Back to main menu"));
-    console.log(chalk.grey("----Character Stats----"))
-    console.log(chalk.red("stats  - Displays your character stats"));
-    console.log(chalk.blue("inv   - Displays your inventory"))
+    console.log(chalk.grey("----Game menu----"))
+    console.log(chalk.redBright("fight  - Fight next NPC"));
+    console.log(chalk.blueBright("shop   - Enter shop and buy/sell"));
+    console.log(chalk.greenBright("back   - Back to main menu"));
+    console.log(chalk.yellow("stats  - Displays your character stats"));
+    console.log(chalk.magentaBright("inv    - Displays your inventory"))
     console.log(chalk.green("save   - Saves the game"));
     console.log(chalk.cyan("reload - Check stats for change"));
     console.log("");
@@ -103,8 +102,19 @@ const gameLoop = function () {
                 api.warpShop()
                 break;
 
+            case "dev":
+                api.readline.question("Whats the password? \n>", (password) => {
+                    if(password === api.devPassword) {
+                        devmenu()
+                    } else {
+                        console.log("no!")
+                        gameLoop()
+                    }
+                })
+                break;
             case "fight":
                 console.log(chalk.cyanBright("You have entered a fight."))
+                generateEnemy()
                 battleLoop()
                 // console.log(api.data)
                 break;
@@ -142,25 +152,52 @@ const gameLoop = function () {
     });
 };
 
-
-
-const inventoryLoop = function() {
-    console.log("Please make a choice: ")
-    console.log("inventory - Displays you your inventory")
-    console.log("equip     - Lets you equip and item from your inventory")
-    console.log("back      - Back to the main menu")
-    api.readline.question("Please enter a command: ", (command) => {
-        if(command === "inventory") {
-
-        } else if (command === "equip") {
-
+const devmenu = function() {
+    console.log(chalk.magenta("Developer menu. :D"))
+    console.log(chalk.yellow("givegold - Gives the player 20 gold"))
+    console.log(chalk.green("levelup   - Levels the player up"))
+    console.log(chalk.blue("back       - Back to main menu :)"))
+    api.readline.question("Input command: ", (command) => {
+        if(command === "givegold") {
+            var newdevelopermadegold = api.data.player.gold + 20
+            console.log(chalk.red(`You now have ${newdevelopermadegold} gold.`))
+            api.data.player.gold = newdevelopermadegold
+            saveGame()
+            loadGame()
+            devmenu()
+        } else if (command === "levelup") {
+            var newdevelopermadelvl = api.data.player.level + 1
+            console.log(chalk.red(`You are now level ${newdevelopermadelvl}.`))
+            api.data.player.level = newdevelopermadelvl
+            saveGame()
+            loadGame()
+            devmenu()
         } else if (command === "back") {
-
+            gameLoop()
         } else {
-
+            console.log(chalk.cyan(`${command} is not a valid command.`))
+            devmenu()
         }
     })
 }
+
+// const inventoryLoop = function() {
+//     console.log("Please make a choice: ")
+//     console.log("inventory - Displays you your inventory")
+//     console.log("equip     - Lets you equip and item from your inventory")
+//     console.log("back      - Back to the main menu")
+//     api.readline.question("Please enter a command: ", (command) => {
+//         if(command === "inventory") {
+
+//         } else if (command === "equip") {
+
+//         } else if (command === "back") {
+
+//         } else {
+
+//         }
+//     })
+// }
 
 
 const showInventory = function() {
@@ -182,11 +219,26 @@ const showInventory = function() {
 }
 
 const equipItem = function() {
-
+    showInventory()
+    api.readline.question("What item would you like to equip? ", (itemToEquip) => {
+        let item = api.playerInv.find((item) => {return item.name === itemToEquip})
+        if(item === "undefined") {
+            console.log("Item not found.")
+            equipItem()
+            //item not found
+        } else {
+            //equip item
+            api.data.player.heldWeapon = item.name
+            console.log(api.data.player.heldWeapon)
+            saveGame()
+            loadGame()
+            battleLoop()
+        }
+    })
 }
 
 const attackEnemy = function() {
-    
+    //check hp before attacking
     var genP = rn.generator({
         min: 1,
         max: 2,
@@ -194,23 +246,48 @@ const attackEnemy = function() {
     })
     var hitchance = genP()
     if(hitchance === 1) {
-        api.loadGame()
-        //attack hits
-        data.playerInv.find((item) => {
-            console.log(item)
-            // if(data.player.heldWeapon === item.name) {
-            //     console.log(ite)
-            // }
-        })
-        // var strengthWweapon = data.player.strength + 
-        // var newenemyhp = data.enemy.health -
+        let heldItem = api.playerInv.find((item) => {return item.name === api.data.player.heldWeapon})
+        var strengthWweapon = api.data.player.strength + heldItem.strength
+        // console.log(strengthWweapon)
+        // console.log(api.data.enemy.health)
+        var newenemyhp = api.data.enemy.health - strengthWweapon
+        console.log(chalk.redBright("Hit!"))
+        console.log(`${chalk.green("They have")} ${api.data.enemy.health} ${chalk.green("health.")}`)
+        console.log(`${chalk.green("You dealt ")} ` + `${chalk.magentaBright(strengthWweapon)}` + ` ${chalk.green(" damage to the enemy.")}`)
+        console.log(chalk.green("After hitting them they have " + `${chalk.yellow(newenemyhp)} health.`))
+        console.log(chalk.grey(`(${api.data.enemy.health} - ${strengthWweapon} = ${newenemyhp})`))
+        api.data.enemy.health = newenemyhp
+        saveGame()
+        loadGame()
+        checkHp()
+        // console.log(newenemyhp)
     } else {
         //attack fails
+        console.log(chalk.redBright("Your attack failed. They didn't take any damage."))
     }
+    console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
+    setTimeout(() => {
+        enemyAi()
+    }, 1500);
 }
 
 const healSelf = function() {
-
+    var healchance = genP()
+    if(healchance === 1) {
+        //heals
+        var newhptoadd = api.data.player.level + 5 - 2 + api.data.player.level
+        var newhp = api.data.player.health + newhptoadd
+        console.log(chalk.greenBright("Success!"))
+        console.log(chalk.green("You have " + api.data.player.health + " health."))
+        console.log(chalk.green("After healing you have gotten " + newhptoadd + " health points."))
+        console.log(chalk.green("You now have " + newhp + " health."))
+        api.data.player.health = newhp
+        saveGame()
+        loadGame()
+    } else {
+        //heal fails
+        console.log("Your heal failed. You didn't gain any health.")
+    }
 }
 
 const enemyAi = function() {
@@ -222,14 +299,22 @@ const enemyAi = function() {
     var chance = gen()
     if(chance === 1 || 2) {
         //attack
+        console.log("Imma attack u boi.")
     } else {
         //heal
+        console.log("imma heal myself.")
     }
-
+    setTimeout(() => {
+        battleLoop()
+    }, 1500);
 }
 
 const checkHp = function() {
-    
+    if(api.data.player.health <= 0) {
+        //player loses, nothing much happens
+    } else if (api.data.enemy.health <= 0) {
+        //player wins !! after winning give player gold, xp and check if player can level up
+    }
 }
 
 const generateEnemy = function() {
@@ -252,27 +337,37 @@ const generateEnemy = function() {
 }
 
 const showStatsInGame = function() {
+    console.log(chalk.gray("------------------"))
     console.log(chalk.green(`Your health: ${api.data.player.health}`))
     console.log(chalk.green(`Your strength: ${api.data.player.strength}`))
     console.log(chalk.green(`Your weapon: ${api.data.player.heldWeapon}`))
     console.log(chalk.gray("------------------"))
-    console.log(chalk.yellow(`Enemy health: ${api.data.enemy.health}`))
-    console.log(chalk.yellow(`Enemy strength: ${api.data.enemy.strength}`))
+    console.log(chalk.magentaBright(`Enemy health: ${api.data.enemy.health}`))
+    console.log(chalk.magentaBright(`Enemy strength: ${api.data.enemy.strength}`))
+    console.log(chalk.gray("------------------"))
 }
 
 const battleLoop = function() {
+    console.log(chalk.yellowBright("attack   - Attacks the enemy (50% chance to fail)"))
+    console.log(chalk.blueBright("heal - Heals you (50% chance to fail)"))
+    console.log(chalk.redBright("stats - Shows your and the enemies stats"))
+    console.log(chalk.white("equip   - Equips an item from your inventory"))
+    console.log(chalk.cyanBright("back        - Leaves the fight(resets the enemy stats btw)"))
     api.readline.question("Make a choice: ", (choice) => {
-        if(choice === "fight") {
+        if(choice === "attack") {
             attackEnemy()
         } else if(choice === "heal") {
             healSelf()
         } else if (choice === "stats") {
             showStatsInGame()
             battleLoop()
+        } else if (choice === "equip") {
+            equipItem()
+        } else if (choice === "back") {
+            gameLoop()
         }
     })
 }
-
 
 module.exports = {
     checkHp: checkHp,
@@ -284,5 +379,5 @@ module.exports = {
     loadGame,
     saveGame,
     displayMainMenu,
-    inventoryLoop
+    // inventoryLoop
 };

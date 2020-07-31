@@ -10,6 +10,7 @@ const {
     displayMainMenu,
     inventoryLoop
 } = require("./scripts/gameLoop.js");
+const devPassword = "koneko69420";
 const {warpShop} = require("./scripts/shop.js")
 const {buyItem} = require("./scripts/shop.js")
 const chalk = require("chalk");
@@ -19,6 +20,7 @@ const readline = require("readline").createInterface({
 });
 
 global.api = {
+    devPassword,
     checkHp,
     enemyTurnAI,
     attackEnemy,
