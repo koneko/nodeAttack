@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function addUser() {
+            var username = document.getElementById("name")
+            console.log(username)
+            // var grabname= prompt("What is your name?")
+            // if(grabname === "") {
+            //     console.log("That aint vailid.")
+            //     var grabname= prompt("What is your name?")
+            // }
+            // console.log(grabname)
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+</head>
+<body>
+    <h1>Client side</h1>
+    <p>The button bellow connects you to the server.</p>
+    <input id="name" type="text">
+    <button onclick="addUser()">Join</button>
+</body>
+</html>
+

@@ -1,4 +1,8 @@
 const {
+    checkHp,
+    enemyTurnAI,
+    attackEnemy,
+    healSelf,
     createGame,
     gameLoop,
     loadGame,
@@ -6,12 +10,6 @@ const {
     displayMainMenu,
     inventoryLoop
 } = require("./scripts/gameLoop.js");
-const {
-    checkHp,
-    enemyTurnAI,
-    attackEnemy,
-    healSelf
-} = require("./scripts/fight.js")
 const {warpShop} = require("./scripts/shop.js")
 const {buyItem} = require("./scripts/shop.js")
 const chalk = require("chalk");

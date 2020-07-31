@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const fs = require("fs");
+const rn = require("random-number")
 
 const createGame = function () {
     //Todo: check if save.json already exists, and list stats.
@@ -70,13 +71,13 @@ const displayMainMenu = function() {
 const gameLoop = function () {
 
     console.log(chalk.grey("----Menu navigation----"))
-    console.log(chalk.green("fight  - Fight next NPC"));
-    console.log(chalk.green("shop   - Enter shop and buy/sell"));
-    console.log(chalk.green("inv    - Displays inventory menu"))
+    console.log(chalk.red("fight  - Fight next NPC"));
+    console.log(chalk.blue("shop   - Enter shop and buy/sell"));
     console.log(chalk.green("back   - Back to main menu"));
     console.log(chalk.grey("----Character Stats----"))
-    console.log(chalk.cyan("stats  - Displays your character stats"));
-    console.log(chalk.cyan("save   - Saves the game"));
+    console.log(chalk.red("stats  - Displays your character stats"));
+    console.log(chalk.blue("inv   - Displays your inventory"))
+    console.log(chalk.green("save   - Saves the game"));
     console.log(chalk.cyan("reload - Check stats for change"));
     console.log("");
 
@@ -103,7 +104,9 @@ const gameLoop = function () {
                 break;
 
             case "fight":
-                api.attackEnemy()
+                console.log(chalk.cyanBright("You have entered a fight."))
+                battleLoop()
+                // console.log(api.data)
                 break;
 
             case "save":
@@ -127,8 +130,7 @@ const gameLoop = function () {
                 break;
 
             case "inv":
-            console.log(chalk.red("Welcome to the inventory menu."))
-            api.inventoryLoop()
+                showInventory()
                 break;
 
             default:
@@ -162,12 +164,12 @@ const inventoryLoop = function() {
 
 
 const showInventory = function() {
-    var playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
+    api.playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
     console.log(chalk.grey("--------------------"))
-    console.log(chalk.cyan(`In your inventory you have ${playerInv.length} item(s) in your inventory.`))
+    console.log(chalk.cyan(`In your inventory you have ${api.playerInv.length} item(s) in your inventory.`))
     console.log("Here are their stats individualy.")
     console.log(chalk.grey("--------------------"))
-    playerInv.forEach(item => {
+    api.playerInv.forEach(item => {
         console.log(chalk.blue(`Type: ${item.type}`))
         console.log(chalk.red(`Name: ${item.name}`))
         console.log(chalk.green(`Description: ${item.description}`))
@@ -176,13 +178,107 @@ const showInventory = function() {
         console.log(chalk.magenta(`Strength: ${item.strength}`))
         console.log(chalk.grey("--------------------"))
     });
+    gameLoop()
 }
 
 const equipItem = function() {
 
 }
 
+const attackEnemy = function() {
+    
+    var genP = rn.generator({
+        min: 1,
+        max: 2,
+        integer: true
+    })
+    var hitchance = genP()
+    if(hitchance === 1) {
+        api.loadGame()
+        //attack hits
+        data.playerInv.find((item) => {
+            console.log(item)
+            // if(data.player.heldWeapon === item.name) {
+            //     console.log(ite)
+            // }
+        })
+        // var strengthWweapon = data.player.strength + 
+        // var newenemyhp = data.enemy.health -
+    } else {
+        //attack fails
+    }
+}
+
+const healSelf = function() {
+
+}
+
+const enemyAi = function() {
+    var gen = rn.generator({
+        min: 1,
+        max: 4,
+        integer: true
+    })
+    var chance = gen()
+    if(chance === 1 || 2) {
+        //attack
+    } else {
+        //heal
+    }
+
+}
+
+const checkHp = function() {
+    
+}
+
+const generateEnemy = function() {
+    var genEstrength = rn.generator({
+        min: 3,
+        max: 6,
+        integer: true
+    })
+    var genEhealth = rn.generator({
+        min: 17,
+        max: 28,
+        integer: true
+    })
+    var eStrength = genEstrength()
+    var eHealth = genEhealth()
+    data.enemy.health = eHealth
+    data.enemy.strength = eStrength
+    saveGame()
+    console.log(chalk.green("Enemy stats successfully generated!"))
+}
+
+const showStatsInGame = function() {
+    console.log(chalk.green(`Your health: ${data.player.health}`))
+    console.log(chalk.green(`Your strength: ${data.player.strength}`))
+    console.log(chalk.green(`Your weapon: ${data.player.heldWeapon}`))
+    console.log(chalk.gray("------------------"))
+    console.log(chalk.yellow(`Enemy health: ${data.enemy.health}`))
+    console.log(chalk.yellow(`Enemy strength: ${data.enemy.strength}`))
+}
+
+const battleLoop = function() {
+    api.readline.question("Make a choice: ", (choice) => {
+        if(choice === "fight") {
+            attackEnemy()
+        } else if(choice === "heal") {
+            healSelf()
+        } else if (choice === "stats") {
+            // showStatsInGame()
+            generateEnemy()
+        }
+    })
+}
+
+
 module.exports = {
+    checkHp: checkHp,
+    enemyAi: enemyAi,
+    attackEnemy: attackEnemy,
+    healSelf: healSelf,
     createGame,
     gameLoop,
     loadGame,

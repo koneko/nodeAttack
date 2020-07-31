@@ -6,5 +6,13 @@
         "level": 1,
         "value": 10,
         "strength": 2
+    },
+    {
+        "name" :"none",
+        "description": "Litteraly nothing, equiped by default.",
+        "type": "weapon",
+        "level": 1,
+        "value": 0,
+        "strength": 0
     }
 ]
