@@ -245,19 +245,19 @@ const generateEnemy = function() {
     })
     var eStrength = genEstrength()
     var eHealth = genEhealth()
-    data.enemy.health = eHealth
-    data.enemy.strength = eStrength
+    api.data.enemy.health = eHealth
+    api.data.enemy.strength = eStrength
     saveGame()
     console.log(chalk.green("Enemy stats successfully generated!"))
 }
 
 const showStatsInGame = function() {
-    console.log(chalk.green(`Your health: ${data.player.health}`))
-    console.log(chalk.green(`Your strength: ${data.player.strength}`))
-    console.log(chalk.green(`Your weapon: ${data.player.heldWeapon}`))
+    console.log(chalk.green(`Your health: ${api.data.player.health}`))
+    console.log(chalk.green(`Your strength: ${api.data.player.strength}`))
+    console.log(chalk.green(`Your weapon: ${api.data.player.heldWeapon}`))
     console.log(chalk.gray("------------------"))
-    console.log(chalk.yellow(`Enemy health: ${data.enemy.health}`))
-    console.log(chalk.yellow(`Enemy strength: ${data.enemy.strength}`))
+    console.log(chalk.yellow(`Enemy health: ${api.data.enemy.health}`))
+    console.log(chalk.yellow(`Enemy strength: ${api.data.enemy.strength}`))
 }
 
 const battleLoop = function() {
@@ -267,8 +267,8 @@ const battleLoop = function() {
         } else if(choice === "heal") {
             healSelf()
         } else if (choice === "stats") {
-            // showStatsInGame()
-            generateEnemy()
+            showStatsInGame()
+            battleLoop()
         }
     })
 }
