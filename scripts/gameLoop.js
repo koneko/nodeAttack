@@ -1,6 +1,7 @@
 const chalk = require("chalk");
 const fs = require("fs");
-const rn = require("random-number")
+const rn = require("random-number");
+const { makerMenu } = require("./itemMaker");
 
 const createGame = function () {
     //Todo: check if save.json already exists, and list stats.
@@ -157,6 +158,7 @@ const devmenu = function() {
     console.log(chalk.yellow("givegold - Gives the player 20 gold"))
     console.log(chalk.green("levelup   - Levels the player up"))
     console.log(chalk.blue("back       - Back to main menu :)"))
+    console.log(chalk.redBright("makeitem      - Creates an item for shop(can be used to add more items :))"))
     api.readline.question("Input command: ", (command) => {
         if(command === "givegold") {
             var newdevelopermadegold = api.data.player.gold + 20
@@ -174,6 +176,8 @@ const devmenu = function() {
             devmenu()
         } else if (command === "back") {
             gameLoop()
+        } else if (command === "makeitem") {
+            api.makerMenu()
         } else {
             console.log(chalk.cyan(`${command} is not a valid command.`))
             devmenu()
@@ -219,7 +223,15 @@ const showInventory = function() {
 }
 
 const equipItem = function() {
-    showInventory()
+    api.playerInv.forEach(item => {
+        console.log(chalk.blue(`Type: ${item.type}`))
+        console.log(chalk.red(`Name: ${item.name}`))
+        console.log(chalk.green(`Description: ${item.description}`))
+        console.log(chalk.cyan(`Required level: ${item.level}`))
+        console.log(chalk.yellow(`Value: ${item.value}`))
+        console.log(chalk.magenta(`Strength: ${item.strength}`))
+        console.log(chalk.grey("--------------------"))
+    });
     api.readline.question("What item would you like to equip? ", (itemToEquip) => {
         let item = api.playerInv.find((item) => {return item.name === itemToEquip})
         if(item === "undefined") {
@@ -229,7 +241,7 @@ const equipItem = function() {
         } else {
             //equip item
             api.data.player.heldWeapon = item.name
-            console.log(api.data.player.heldWeapon)
+            console.log("Successfully equiped " + api.data.player.heldWeapon)
             saveGame()
             loadGame()
             battleLoop()
@@ -253,7 +265,7 @@ const attackEnemy = function() {
         var newenemyhp = api.data.enemy.health - strengthWweapon
         console.log(chalk.redBright("Hit!"))
         console.log(`${chalk.green("They have")} ${api.data.enemy.health} ${chalk.green("health.")}`)
-        console.log(`${chalk.green("You dealt ")} ` + `${chalk.magentaBright(strengthWweapon)}` + ` ${chalk.green(" damage to the enemy.")}`)
+        console.log(`${chalk.green("You dealt ")}` + `${chalk.magentaBright(strengthWweapon)}` + `${chalk.green(" damage to the enemy.")}`)
         console.log(chalk.green("After hitting them they have " + `${chalk.yellow(newenemyhp)} health.`))
         console.log(chalk.grey(`(${api.data.enemy.health} - ${strengthWweapon} = ${newenemyhp})`))
         api.data.enemy.health = newenemyhp
@@ -268,10 +280,15 @@ const attackEnemy = function() {
     console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
     setTimeout(() => {
         enemyAi()
-    }, 1500);
+    }, 2500);
 }
 
 const healSelf = function() {
+    var genP = rn.generator({
+        min: 1,
+        max: 2,
+        integer: true
+    })
     var healchance = genP()
     if(healchance === 1) {
         //heals
@@ -288,9 +305,14 @@ const healSelf = function() {
         //heal fails
         console.log("Your heal failed. You didn't gain any health.")
     }
+    console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
+    setTimeout(() => {
+        enemyAi()
+    }, 2500);
 }
 
 const enemyAi = function() {
+    checkHp()
     var gen = rn.generator({
         min: 1,
         max: 4,
@@ -299,22 +321,81 @@ const enemyAi = function() {
     var chance = gen()
     if(chance === 1 || 2) {
         //attack
-        console.log("Imma attack u boi.")
+        var genP = rn.generator({
+            min: 1,
+            max: 2,
+            integer: true
+        })
+        var hitchance = genP()
+        if(hitchance === 1) {
+            // let heldItem = api.playerInv.find((item) => {return item.name === api.data.player.heldWeapon})
+            // var strengthWweapon = api.data.player.strength + heldItem.strength
+            // console.log(strengthWweapon)
+            // console.log(api.data.enemy.health)
+            var newplayerhp = api.data.player.health - api.data.enemy.strength
+            console.log(chalk.redBright("Hit!"))
+            console.log(`${chalk.green("You have")} ${api.data.player.health} ${chalk.green("health.")}`)
+            console.log(`${chalk.green("They dealt ")}` + `${chalk.magentaBright(api.data.enemy.strength)}` + `${chalk.green(" damage to you.")}`)
+            console.log(chalk.green("After hitting you, you are left with " + `${chalk.yellow(newplayerhp)} health.`))
+            console.log(chalk.grey(`(${api.data.player.health} - ${api.data.enemy.strength} = ${newplayerhp})`))
+            api.data.player.health = newplayerhp
+            saveGame()
+            loadGame()
+            checkHp()
+            // console.log(newenemyhp)
+        } else {
+            //attack fails
+            console.log(chalk.redBright("Their attack failed. You didn't take any damage."))
+        }
     } else {
         //heal
-        console.log("imma heal myself.")
+        var genP = rn.generator({
+            min: 1,
+            max: 2,
+            integer: true
+        })
+        var healchance = genP()
+        if(healchance === 1) {
+            //heals
+            var newhptoadd = api.data.enemy.health + 5 - 2 + api.data.player.level
+            var newhp = api.data.enemy.health + newhptoadd
+            console.log(chalk.greenBright("Success!"))
+            console.log(chalk.green("They have " + api.data.enemy.health + " health."))
+            console.log(chalk.green("After healing they have gotten " + newhptoadd + " health points."))
+            console.log(chalk.green("They now have " + newhp + " health."))
+            api.data.enemy.health = newhp
+            saveGame()
+            loadGame()
+        } else {
+            //heal fails
+            console.log("Their heal failed. They didn't gain any health.")
+        }
     }
+    console.log(chalk.blueBright("It is your turn!"))
     setTimeout(() => {
         battleLoop()
-    }, 1500);
+    }, 1000);
 }
 
 const checkHp = function() {
     if(api.data.player.health <= 0) {
         //player loses, nothing much happens
+        console.log(chalk.red("Sorry there lad, you lost."))
+        console.log(chalk.redBright("Better luck next time. Sending you to the lobby."))
+        gameLoop()
     } else if (api.data.enemy.health <= 0) {
         //player wins !! after winning give player gold, xp and check if player can level up
+        console.log(chalk.green("Yay! You won! Great job!"))
+        console.log()
     }
+}
+
+const giveXP = function() {
+
+}
+
+const giveGold = function() {
+
 }
 
 const generateEnemy = function() {
