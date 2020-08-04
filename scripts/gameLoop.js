@@ -156,6 +156,7 @@ const gameLoop = function () {
 const devmenu = function() {
     console.log(chalk.magenta("Developer menu. :D"))
     console.log(chalk.yellow("givegold - Gives the player 20 gold"))
+    console.log(chalk.red("givedevitem - U get developer item :)"))
     console.log(chalk.green("levelup   - Levels the player up"))
     console.log(chalk.blue("back       - Back to main menu :)"))
     console.log(chalk.redBright("makeitem      - Creates an item for shop(can be used to add more items :))"))
@@ -178,7 +179,24 @@ const devmenu = function() {
             gameLoop()
         } else if (command === "makeitem") {
             api.makerMenu()
-        } else {
+        } else if (command === "givedevitem") {
+            var playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
+            playerInv.push({
+                "name" :"InstaKiller",
+                "description": "Instantly kills anything. Developer item.",
+                "type": "weapon",
+                "level": 1,
+                "value": 69420,
+                "strength": 42069
+        })
+            var playerInvStringified = JSON.stringify(playerInv)
+            fs.writeFileSync("data/inventory.json", playerInvStringified)
+
+            saveGame()
+            loadGame()
+            devmenu()
+        }
+        else {
             console.log(chalk.cyan(`${command} is not a valid command.`))
             devmenu()
         }
@@ -277,10 +295,14 @@ const attackEnemy = function() {
         //attack fails
         console.log(chalk.redBright("Your attack failed. They didn't take any damage."))
     }
-    console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
-    setTimeout(() => {
-        enemyAi()
-    }, 2500);
+    if(api.data.enemy.health <= 0) {
+        //hp gets checked already in attacking phase
+    } else {
+        console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
+        setTimeout(() => {
+            enemyAi()
+        }, 2500);
+    }
 }
 
 const healSelf = function() {
@@ -305,14 +327,21 @@ const healSelf = function() {
         //heal fails
         console.log("Your heal failed. You didn't gain any health.")
     }
-    console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
-    setTimeout(() => {
-        enemyAi()
-    }, 2500);
+    if(api.data.enemy.health <= 0) {
+
+    } else {
+        console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
+        setTimeout(() => {
+            enemyAi()
+        }, 2500);
+    }
+
 }
 
 const enemyAi = function() {
-    checkHp()
+    if(api.data.enemy.health <= 0) {
+
+    }
     var gen = rn.generator({
         min: 1,
         max: 4,
@@ -384,18 +413,42 @@ const checkHp = function() {
         console.log(chalk.redBright("Better luck next time. Sending you to the lobby."))
         gameLoop()
     } else if (api.data.enemy.health <= 0) {
+        api.data.player.health = 20
+        saveGame()
+        loadGame()
         //player wins !! after winning give player gold, xp and check if player can level up
-        console.log(chalk.green("Yay! You won! Great job!"))
-        console.log()
+        console.log(chalk.green("Great job, you won! For your efforts, you got some experience and gold."))
+        console.log(chalk.gray("-------------"))
+        giveGold()
+        giveXP()
+        gameLoop()
     }
 }
 
 const giveXP = function() {
-
+    var randomxpgen = rn.generator({
+        min: 12,
+        max: 31,
+        integer: true
+    })
+    var xptogive = randomxpgen()
+    api.data.player.currentxp = api.data.player.currentxp + xptogive
+    saveGame()
+    loadGame()
+    console.log(chalk.greenBright(`You got ${xptogive} xp points.`))
 }
 
 const giveGold = function() {
-
+    var randomgoldgen = rn.generator({
+        min: 6,
+        max: 17,
+        integer: true
+    })
+    var goldtogive = randomgoldgen()
+    api.data.player.gold = api.data.player.gold + goldtogive
+    saveGame()
+    loadGame()
+    console.log(chalk.yellow(`You got ${goldtogive} gold.`))
 }
 
 const generateEnemy = function() {
@@ -413,6 +466,7 @@ const generateEnemy = function() {
     var eHealth = genEhealth()
     api.data.enemy.health = eHealth
     api.data.enemy.strength = eStrength
+    api.data.player.health = 20
     saveGame()
     console.log(chalk.green("Enemy stats successfully generated!"))
 }
@@ -436,7 +490,11 @@ const battleLoop = function() {
     console.log(chalk.cyanBright("back        - Leaves the fight(resets the enemy stats btw)"))
     api.readline.question("Make a choice: ", (choice) => {
         if(choice === "attack") {
-            attackEnemy()
+            if(api.data.player.health <= 0) {
+                checkHp()
+            } else {
+                attackEnemy()
+            }
         } else if(choice === "heal") {
             healSelf()
         } else if (choice === "stats") {
@@ -446,6 +504,9 @@ const battleLoop = function() {
             equipItem()
         } else if (choice === "back") {
             gameLoop()
+        } else {
+            console.log(`${choice} is not valid. Try again.`)
+            battleLoop()
         }
     })
 }
