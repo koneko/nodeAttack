@@ -4,7 +4,7 @@ To run this application you must have atleast node.js 1.14.0+
 
 ## A simple game made in javascript
 
-# This is the beta branch, still being worked on
-Currently unplayable and being reworked on, be sure to check in :)
+# This is pretty much the main place to get the game
+## its nearly done, please wait :3
 
 #### If you find any issues please join the [discord server](https://discord.gg/kdPgPHH) and direct message a developer.
