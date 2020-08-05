@@ -28,9 +28,10 @@ const saveGame = function () {
 const displayMainMenu = function() {
     console.log(chalk.green('Welcome to nodeAttack!'));
     console.log(chalk.yellow('Main menu:'));
-    console.log(chalk.cyan("new  - New game"));
-    console.log(chalk.blue("load - Load saved game"));
-    console.log(chalk.red("exit - Exit game"));
+    console.log(chalk.cyan("new       - New game"));
+    console.log(chalk.blue("load      - Load saved game"));
+    console.log(chalk.magenta("changelog - Show what was added"))
+    console.log(chalk.red("exit      - Exit game"));
     console.log("");
 
     api.readline.question("Please enter a command: ", (command) => {
@@ -59,7 +60,13 @@ const displayMainMenu = function() {
         } else if(command == "exit") {
             console.log(chalk.yellow(`Goodbye, dear player.`));   
             process.exit(0);
-    
+        } else if (command == "changelog") {
+            console.log(chalk.gray("---Version 1.2.0---"))
+            console.log("- Started change log")
+            console.log("- Reworked whole game")
+            console.log("- Menus and shop")
+            console.log("")
+            api.displayMainMenu()
         } else { 
             console.log(chalk.red(`Command "${command}" is not a valid command!`));   
             console.log("");
@@ -188,7 +195,7 @@ const devmenu = function() {
         } else if (command === "givedevitem") {
             var playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
             playerInv.push({
-                "name" :"InstaKiller",
+                "name" :"iamdev",
                 "description": "Instantly kills anything. Developer item.",
                 "type": "weapon",
                 "level": 1,
