@@ -5,6 +5,7 @@
         "xpforlevelup": 100, 
         "gold": 10,
         "health": 20,
+        "maxhealth": 20,
         "strength": 5,
         "heldWeapon": "none"
     },

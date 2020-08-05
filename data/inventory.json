@@ -1,18 +1,1 @@
-[
-    {
-        "name" :"Spiked Gloves",
-        "description": "Gloves with spikes. A little addon to your fists.",
-        "type": "weapon",
-        "level": 1,
-        "value": 10,
-        "strength": 2
-    },
-    {
-        "name" :"none",
-        "description": "Litteraly nothing, equiped by default.",
-        "type": "weapon",
-        "level": 1,
-        "value": 0,
-        "strength": 0
-    }
-]
+[{"name":"Spiked Gloves","description":"Gloves with spikes. A little addon to your fists.","type":"weapon","level":1,"value":10,"strength":2},{"name":"none","description":"Litteraly nothing, equiped by default.","type":"weapon","level":1,"value":0,"strength":0},{"name":"InstaKiller","description":"Instantly kills anything. Developer item.","type":"weapon","level":1,"value":69420,"strength":42069}]

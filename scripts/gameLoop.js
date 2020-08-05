@@ -77,6 +77,7 @@ const gameLoop = function () {
     console.log(chalk.greenBright("back   - Back to main menu"));
     console.log(chalk.yellow("stats  - Displays your character stats"));
     console.log(chalk.magentaBright("inv    - Displays your inventory"))
+    console.log(chalk.white("equip  - Equips an item from ur inventory"));
     console.log(chalk.green("save   - Saves the game"));
     console.log(chalk.cyan("reload - Check stats for change"));
     console.log("");
@@ -144,6 +145,11 @@ const gameLoop = function () {
                 showInventory()
                 break;
 
+            case "equip":
+                equipItem()
+                api.gameLoop()
+                break;
+
             default:
                 console.log(chalk.red(`Command "${command}" is not a valid command!`));
                 console.log("");
@@ -189,9 +195,9 @@ const devmenu = function() {
                 "value": 69420,
                 "strength": 42069
         })
+        console.log("recieve dev item")
             var playerInvStringified = JSON.stringify(playerInv)
             fs.writeFileSync("data/inventory.json", playerInvStringified)
-
             saveGame()
             loadGame()
             devmenu()
@@ -262,7 +268,6 @@ const equipItem = function() {
             console.log("Successfully equiped " + api.data.player.heldWeapon)
             saveGame()
             loadGame()
-            battleLoop()
         }
     })
 }
@@ -328,7 +333,7 @@ const healSelf = function() {
         console.log("Your heal failed. You didn't gain any health.")
     }
     if(api.data.enemy.health <= 0) {
-
+        //nothing here xd
     } else {
         console.log(chalk.blueBright("The enemy is thinking about what they should do..."))
         setTimeout(() => {
@@ -436,6 +441,18 @@ const giveXP = function() {
     saveGame()
     loadGame()
     console.log(chalk.greenBright(`You got ${xptogive} xp points.`))
+    if(api.data.player.currentxp >= api.data.player.xpforlevelup) {
+        api.data.player.currentxp = api.data.player.currentxp - api.data.player.xpforlevelup
+        api.data.player.strength = api.data.player.strength + 2
+        api.data.player.health = api.data.player.health + 5
+        api.data.player.maxhealth = api.data.player.maxhealth + 5
+        api.data.player.xpforlevelup = api.data.player.xpforlevelup + 10
+        saveGame()
+        loadGame()
+        console.log(chalk.redBright(`Great job, you leveled up! You now have ${api.data.player.strength} base strength and you have ${api.data.player.maxhealth} base health.`))
+    } else {
+        console.log(chalk.gray("(You don't have enough xp to level up.)"))
+    }
 }
 
 const giveGold = function() {
@@ -466,7 +483,7 @@ const generateEnemy = function() {
     var eHealth = genEhealth()
     api.data.enemy.health = eHealth
     api.data.enemy.strength = eStrength
-    api.data.player.health = 20
+    api.data.player.health = api.data.player.maxhealth
     saveGame()
     console.log(chalk.green("Enemy stats successfully generated!"))
 }
@@ -502,6 +519,7 @@ const battleLoop = function() {
             battleLoop()
         } else if (choice === "equip") {
             equipItem()
+            battleLoop()
         } else if (choice === "back") {
             gameLoop()
         } else {

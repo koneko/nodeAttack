@@ -1,15 +1,1 @@
-{
-    "player":{
-        "level": 1,
-        "currentxp": 1,
-        "xpforlevelup": 100, 
-        "gold": 10,
-        "health": 20,
-        "strength": 5,
-        "heldWeapon": "none"
-    },
-    "enemy":{
-        "health": 20,
-        "strength": 5
-    }
-}
+{"player":{"level":1,"currentxp":21,"xpforlevelup":110,"gold":20,"health":25,"maxhealth":25,"strength":7,"heldWeapon":"InstaKiller"},"enemy":{"health":-42053,"strength":3}}
