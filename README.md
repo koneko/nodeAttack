@@ -1,5 +1,5 @@
 To run this application you must have atleast node.js 1.14.0+
-# Lmao, the master branch is like deprecated for a while, go to beta for the reworked version.
+# get the source code from the link bellow
 https://github.com/thekoneko/nodeAttack/tree/beta
 
 # nodeAttack
