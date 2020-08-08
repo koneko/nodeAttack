@@ -33,7 +33,7 @@ const makerMenu = function() {
                             // console.log(level)
                             // console.log(value)
                             // console.log(strength)
-                            createItem(name, description, type, level, value, strength)
+                            createItem(name, description, type, +level, +value, +strength)
                             console.log(chalk.greenBright("Item created.\nHere are the stats:"))
                             console.log(chalk.yellowBright(`Item name: ${name}`))
                             console.log(chalk.yellowBright(`Item description: ${description}`))

@@ -1,1 +1,48 @@
-[{"name":"Dagger","description":"A cool dagger for a cool player B)","type":"weapon","level":1,"value":23,"strength":3},{"name":"Sword","description":"The sword that split the seas... comes later.","type":"weapon","level":3,"value":40,"strength":7},{"name":"Bow","description":"A bow, easy to use, hard to master.","type":"weapon","level":"5","value":"30","strength":"8.5"},{"name":"Longsword","description":"A sword that is long, and sharp.","type":"weapon","level":"9","value":"60","strength":"12"}]
+[
+    {
+        "name": "Dagger",
+        "description": "A cool dagger for a cool player B)",
+        "type": "weapon",
+        "level": 1,
+        "value": 23,
+        "strength": 3
+    },
+    {
+        "name": "Sword",
+        "description": "The sword that split the seas... comes later.",
+        "type": "weapon",
+        "level": 3,
+        "value": 40,
+        "strength": 7
+    },
+    {
+        "name": "Bow",
+        "description": "A bow, easy to use, hard to master.",
+        "type": "weapon",
+        "level": 5,
+        "value": 30,
+        "strength": 8.5
+    },
+    {
+        "name": "Longsword",
+        "description": "A sword that is long, and sharp.",
+        "type": "weapon",
+        "level": 9,
+        "value": 60,
+        "strength": 12
+    }, {
+        "name": "Spear",
+        "description": "A spear for piercing your ears, oh and your enemies.",
+        "type": "weapon",
+        "level": 13,
+        "value": 65,
+        "strength": 14
+    }, {
+        "name": "Elven Shortsword",
+        "description": "A fine weapon from the elven realm, the elves really are good at fighting.",
+        "type": "weapon",
+        "level": 12,
+        "value": 90,
+        "strength": 15
+    }
+]
