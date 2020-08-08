@@ -41,6 +41,7 @@ const makerMenu = function() {
                             console.log(chalk.yellowBright(`Item level: ${level}`))
                             console.log(chalk.yellowBright(`Item value: ${value}`))
                             console.log(chalk.yellowBright(`Item strength: ${strength}`))
+                            api.gameLoop()
                         })
                     })
                 })

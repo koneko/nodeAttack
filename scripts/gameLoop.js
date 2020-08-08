@@ -61,6 +61,10 @@ const displayMainMenu = function() {
             console.log(chalk.yellow(`Goodbye, dear player.`));   
             process.exit(0);
         } else if (command == "changelog") {
+            console.log(chalk.gray("---Version 1.2.1---"))
+            console.log("- Small bug fixes")
+            console.log("- More items")
+            console.log("- Enemy scaling")
             console.log(chalk.gray("---Version 1.2.0---"))
             console.log("- Started change log")
             console.log("- Reworked whole game")
@@ -153,8 +157,7 @@ const gameLoop = function () {
                 break;
 
             case "equip":
-                equipItem()
-                api.gameLoop()
+                equipItemFromGameLoop()
                 break;
 
             default:
@@ -275,10 +278,36 @@ const equipItem = function() {
             console.log("Successfully equiped " + api.data.player.heldWeapon)
             saveGame()
             loadGame()
+            battleLoop()
         }
     })
 }
-
+const equipItemFromGameLoop = function() {
+    api.playerInv.forEach(item => {
+        console.log(chalk.blue(`Type: ${item.type}`))
+        console.log(chalk.red(`Name: ${item.name}`))
+        console.log(chalk.green(`Description: ${item.description}`))
+        console.log(chalk.cyan(`Required level: ${item.level}`))
+        console.log(chalk.yellow(`Value: ${item.value}`))
+        console.log(chalk.magenta(`Strength: ${item.strength}`))
+        console.log(chalk.grey("--------------------"))
+    });
+    api.readline.question("What item would you like to equip? ", (itemToEquip) => {
+        let item = api.playerInv.find((item) => {return item.name === itemToEquip})
+        if(item === "undefined") {
+            console.log("Item not found.")
+            equipItem()
+            //item not found
+        } else {
+            //equip item
+            api.data.player.heldWeapon = item.name
+            console.log("Successfully equiped " + api.data.player.heldWeapon)
+            saveGame()
+            loadGame()
+            gameLoop()
+        }
+    })
+}
 const attackEnemy = function() {
     //check hp before attacking
     var genP = rn.generator({
@@ -488,8 +517,10 @@ const generateEnemy = function() {
     })
     var eStrength = genEstrength()
     var eHealth = genEhealth()
-    api.data.enemy.health = eHealth
-    api.data.enemy.strength = eStrength
+    var newehealth = api.data.player.level * 2 + eHealth
+    var newestrength = api.data.player.level * 1.5 + eStrength
+    api.data.enemy.health = newehealth
+    api.data.enemy.strength = newestrength
     api.data.player.health = api.data.player.maxhealth
     saveGame()
     console.log(chalk.green("Enemy stats successfully generated!"))
@@ -526,7 +557,6 @@ const battleLoop = function() {
             battleLoop()
         } else if (choice === "equip") {
             equipItem()
-            battleLoop()
         } else if (choice === "back") {
             gameLoop()
         } else {
