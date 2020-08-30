@@ -8,11 +8,11 @@
         "strength": 0
     },
     {
-        "name" :"Spiked Gloves",
-        "description": "Gloves with spikes. A little addon to your fists.",
-        "type": "weapon",
+        "name" :"nothing",
+        "description": "Litteraly nothing, equiped by default.",
+        "type": "armor",
         "level": 1,
-        "value": 10,
-        "strength": 2
+        "value": 0,
+        "protection": 0 
     }
 ]

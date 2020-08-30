@@ -245,26 +245,48 @@ const showInventory = function() {
     console.log("Here are their stats individualy.")
     console.log(chalk.grey("--------------------"))
     api.playerInv.forEach(item => {
-        console.log(chalk.blue(`Type: ${item.type}`))
-        console.log(chalk.red(`Name: ${item.name}`))
-        console.log(chalk.green(`Description: ${item.description}`))
-        console.log(chalk.cyan(`Required level: ${item.level}`))
-        console.log(chalk.yellow(`Value: ${item.value}`))
-        console.log(chalk.magenta(`Strength: ${item.strength}`))
-        console.log(chalk.grey("--------------------"))
+        if(item.type == "armor") {
+            console.log(chalk.blue(`Type: ${item.type}`))
+            console.log(chalk.red(`Name: ${item.name}`))
+            console.log(chalk.green(`Description: ${item.description}`))
+            console.log(chalk.cyan(`Required level: ${item.level}`))
+            console.log(chalk.yellow(`Value: ${item.value}`))
+            console.log(chalk.magenta(`Protection: ${item.protection}`))
+            console.log(chalk.grey("--------------------"))
+        } else if (item.type == "weapon") {
+            console.log(chalk.blueBright(`Type: ${item.type}`))
+            console.log(chalk.redBright(`Name: ${item.name}`))
+            console.log(chalk.greenBright(`Description: ${item.description}`))
+            console.log(chalk.cyanBright(`Required level: ${item.level}`))
+            console.log(chalk.yellowBright(`Value: ${item.value}`))
+            console.log(chalk.magentaBright(`Strength: ${item.strength}`))
+            console.log(chalk.grey("--------------------"))
+        }
+
     });
     gameLoop()
 }
 
 const equipItem = function() {
     api.playerInv.forEach(item => {
-        console.log(chalk.blue(`Type: ${item.type}`))
-        console.log(chalk.red(`Name: ${item.name}`))
-        console.log(chalk.green(`Description: ${item.description}`))
-        console.log(chalk.cyan(`Required level: ${item.level}`))
-        console.log(chalk.yellow(`Value: ${item.value}`))
-        console.log(chalk.magenta(`Strength: ${item.strength}`))
-        console.log(chalk.grey("--------------------"))
+        if(item.type == "armor") {
+            console.log(chalk.blue(`Type: ${item.type}`))
+            console.log(chalk.red(`Name: ${item.name}`))
+            console.log(chalk.green(`Description: ${item.description}`))
+            console.log(chalk.cyan(`Required level: ${item.level}`))
+            console.log(chalk.yellow(`Value: ${item.value}`))
+            console.log(chalk.magenta(`Protection: ${item.protection}`))
+            console.log(chalk.grey("--------------------"))
+        } else if (item.type == "weapon") {
+            console.log(chalk.blueBright(`Type: ${item.type}`))
+            console.log(chalk.redBright(`Name: ${item.name}`))
+            console.log(chalk.greenBright(`Description: ${item.description}`))
+            console.log(chalk.cyanBright(`Required level: ${item.level}`))
+            console.log(chalk.yellowBright(`Value: ${item.value}`))
+            console.log(chalk.magentaBright(`Strength: ${item.strength}`))
+            console.log(chalk.grey("--------------------"))
+        }
+
     });
     api.readline.question("What item would you like to equip? ", (itemToEquip) => {
         let item = api.playerInv.find((item) => {return item.name === itemToEquip})

@@ -7,7 +7,8 @@
         "health": 20,
         "maxhealth": 20,
         "strength": 5,
-        "heldWeapon": "none"
+        "heldWeapon": "none",
+        "equipedArmor": "nothing"
     },
     "enemy":{
         "health": 20,
