@@ -286,7 +286,6 @@ const equipItem = function() {
             console.log(chalk.magentaBright(`Strength: ${item.strength}`))
             console.log(chalk.grey("--------------------"))
         }
-
     });
     api.readline.question("What item would you like to equip? ", (itemToEquip) => {
         let item = api.playerInv.find((item) => {return item.name === itemToEquip})
@@ -296,11 +295,20 @@ const equipItem = function() {
             //item not found
         } else {
             //equip item
-            api.data.player.heldWeapon = item.name
-            console.log("Successfully equiped " + api.data.player.heldWeapon)
-            saveGame()
-            loadGame()
-            battleLoop()
+            if(item.type == "weapon") {
+                api.data.player.heldWeapon = item.name
+                console.log("Successfully equiped " + api.data.player.heldWeapon)
+                saveGame()
+                loadGame()
+                battleLoop()
+            } else if (item.type == "armor") {
+                api.data.player.equipedArmor = item.name
+                console.log(chalk.blueBright(`Successfully equiped ${api.data.player.equipedArmor}.`))
+                saveGame()
+                loadGame()
+                battleLoop()
+            }
+
         }
     })
 }

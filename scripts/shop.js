@@ -53,7 +53,11 @@ const buyItem = function() {
                             var newPlayerGold = api.data.player.gold - item.value
                             api.data.player.gold = newPlayerGold
                             api.saveGame()
-                            giveItem(item.name, item.description, item.type, item.level, item.value, item.strength)
+                            if(item.type == "armor") {
+                                giveItem(item.name, item.description, item.type, item.level, item.value, item.protection)
+                            } else if (item.type == "weapon") {
+                                giveItem(item.name, item.description, item.type, item.level, item.value, item.strength)
+                            }
                             console.log("Shopkeeper: " + chalk.yellow(`Nice choice. That'll be ${item.value} gold. After your payment you will have ${newPlayerGold} gold.`))
                             api.warpShop()
                         } else {
@@ -65,7 +69,7 @@ const buyItem = function() {
                         api.warpShop()
                     }
                 } catch(e) {
-                    console.log(e)
+                    // console.log(e)
                     console.log(chalk.red("The item you input is not real. Try again. Item names are CASE sensitive."));
                     api.buyItem()
                 }
@@ -77,14 +81,26 @@ const buyItem = function() {
 
 const giveItem = function(name, description, type, level, value, strength) {
     var playerInv = JSON.parse(fs.readFileSync("data/inventory.json"))
-    playerInv.push({
-        name: name,
-        description: description,
-        type: type,
-        level: level,
-        value: value,
-        strength: strength
-    })
+    if(type == "weapon") {
+        playerInv.push({
+            name: name,
+            description: description,
+            type: type,
+            level: level,
+            value: value,
+            strength: strength
+        })
+    } else if (type == "armor") {
+        playerInv.push({
+            name: name,
+            description: description,
+            type: type,
+            level: level,
+            value: value,
+            protection: strength
+        })
+    }
+
     var playerInvStringified = JSON.stringify(playerInv)
     fs.writeFileSync("data/inventory.json", playerInvStringified)
     // console.log(playerInvStringified)
